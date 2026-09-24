@@ -1,0 +1,44 @@
+project_name: airbee_bootloader
+package: bootloader
+label: AirBee Bluetooth AppLoader
+quality: production
+description: Signed Bluetooth AppLoader for AirBee firmware updates.
+
+component:
+  - id: bootloader_core
+  - id: bootloader_crc
+  - id: bootloader_aes_sha_ecdsa
+  - id: bootloader_apploader
+  - id: bootloader_image_parser
+  - id: bootloader_token_management
+  - id: bootloader_debug
+
+configuration:
+  - name: BOOTLOADER_ENFORCE_SIGNED_UPGRADE
+    value: 1
+  - name: BOOTLOADER_WRITE_DISABLE
+    value: 1
+  - name: BOOTLOADER_VERSION_MAIN_CUSTOMER
+    value: 4
+  - name: BTL_APPLOADER_USE_CUSTOM_ADDRESS
+    value: 1
+  - name: BTL_APPLOADER_TX_POWER
+    value: 100
+  - name: BTL_APPLOADER_DEVICE_NAME
+    value: AirBee DFU
+
+source:
+  - path: ../../src/bootloader/airbee_apploader.c
+
+toolchain_settings:
+  - option: gcc_linker_option
+    value: -Wl,--wrap=bootloader_apploader_parser_finish
+
+filter:
+  - name: Device Type
+    value: [SoC]
+  - name: MCU
+    value: [Bootloader]
+
+post_build:
+  - profile: bootloader_series_2

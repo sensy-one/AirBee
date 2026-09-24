@@ -1,0 +1,106 @@
+project_name: airbee
+label: AirBee Zigbee and Bluetooth LE environmental sensor
+package: multiprotocol
+category: Zigbee Application
+quality: production
+description: Ultra-low-power selectable Zigbee or Bluetooth LE CO2, temperature, humidity and pressure sensor for AirBee v1.0.0.
+author: SENSY-ONE
+
+component:
+  - id: sl_main
+  - id: bluetooth_stack
+  - id: bluetooth_on_demand_start
+  - id: bluetooth_feature_legacy_advertiser
+  - id: bluetooth_feature_system
+  - id: apploader
+  - id: apploader_util
+  - id: bootloader_interface
+  - id: i2cspm_core
+  - id: gpiointerrupt
+  - id: zigbee_pro_leaf_stack
+  - id: zigbee_zcl_framework_core
+  - id: zigbee_end_device_support
+  - id: zigbee_identify
+  - id: zigbee_network_steering
+  - id: zigbee_reporting
+  - id: zigbee_scan_dispatch
+  - id: zigbee_update_tc_link_key
+  - id: clock_manager
+  - id: toolchain_gcc_lto
+
+configuration:
+  # Firmware v1.0.0, encoded as (major << 16) | (minor << 8) | patch.
+  - name: SL_APPLICATION_VERSION
+    value: 0x00010000
+  - name: SLI_ZIGBEE_PRIMARY_NETWORK_DEVICE_TYPE
+    value: SLI_ZIGBEE_NETWORK_DEVICE_TYPE_SLEEPY_END_DEVICE
+  - name: SLI_ZIGBEE_PRIMARY_NETWORK_SECURITY_TYPE
+    value: SLI_ZIGBEE_NETWORK_SECURITY_TYPE_3_0
+  - name: SL_ZIGBEE_BINDING_TABLE_SIZE
+    value: 8
+  - name: SL_ZIGBEE_END_DEVICE_POLL_TIMEOUT
+    value: MINUTES_32
+  - name: SL_ZIGBEE_END_DEVICE_KEEP_ALIVE_SUPPORT_MODE
+    value: SL_ZIGBEE_KEEP_ALIVE_SUPPORT_ALL
+  - name: SL_ZIGBEE_AF_PLUGIN_END_DEVICE_SUPPORT_LONG_POLL_INTERVAL_SECONDS
+    value: 240
+  - name: SL_ZIGBEE_AF_PLUGIN_END_DEVICE_SUPPORT_SHORT_POLL_INTERVAL_SECONDS
+    value: 1
+  - name: SL_ZIGBEE_AF_PLUGIN_END_DEVICE_SUPPORT_WAKE_TIMEOUT_SECONDS
+    value: 3
+  - name: SL_ZIGBEE_APP_FRAMEWORK_MINIMUM_SLEEP_DURATION_MS
+    value: 5
+  - name: SL_ZIGBEE_APP_FRAMEWORK_BACKOFF_SLEEP_MS
+    value: 0
+  - name: SL_ZIGBEE_APP_FRAMEWORK_STAY_AWAKE_WHEN_NOT_JOINED
+    value: 0
+  - name: SL_POWER_MANAGER_INIT_EMU_EM2_DEBUG_ENABLE
+    value: 0
+  - name: configTOTAL_HEAP_SIZE
+    value: 16384
+  - name: SL_BT_CONFIG_MIN_TX_POWER
+    value: -30
+  - name: SL_BT_CONFIG_MAX_TX_POWER
+    value: 100
+  - name: SL_ZIGBEE_AF_PLUGIN_NETWORK_STEERING_RADIO_TX_POWER
+    value: 10
+  - name: NVM3_DEFAULT_NVM_SIZE
+    value: 32768
+    condition:
+      - device_series_2
+  - name: SL_PSA_ITS_SUPPORT_V1_DRIVER
+    value: 0
+  - name: SL_PSA_ITS_SUPPORT_V2_DRIVER
+    value: 0
+  - name: SL_PSA_ITS_SUPPORT_V3_DRIVER
+    value: 1
+
+source:
+  - path: src/application/app.c
+  - path: src/bluetooth/airbee_bluetooth.c
+  - path: src/platform/airbee_mode.c
+  - path: src/sensors/airbee_sensors.c
+  - path: src/zigbee/airbee_zigbee.c
+
+config_file:
+  - path: config/zigbee/airbee.zap
+    file_id: zap_configuration_file_id
+    directory: zcl
+
+include:
+  - path: src/application
+  - path: src/bluetooth
+  - path: src/platform
+  - path: src/sensors
+  - path: src/zigbee
+
+readme:
+  - path: README.md
+
+filter:
+  - name: Wireless Technology
+    value: [Zigbee, Bluetooth]
+  - name: Device Type
+    value: [SoC]
+  - name: Capability
+    value: [Multiprotocol]

@@ -1,0 +1,14 @@
+BasedOnStyle: LLVM
+IndentWidth: 2
+ContinuationIndentWidth: 2
+ColumnLimit: 80
+BreakBeforeBraces: Linux
+AllowShortFunctionsOnASingleLine: Empty
+AllowShortIfStatementsOnASingleLine: Never
+IndentCaseLabels: true
+BinPackArguments: false
+BinPackParameters: false
+SortIncludes: false
+AlignConsecutiveMacros: Consecutive
+BreakBeforeBinaryOperators: All
+Cpp11BracedListStyle: false

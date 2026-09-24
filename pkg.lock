@@ -1,0 +1,16 @@
+version = "0"
+
+[dependency]
+  cmake = [{ installer = "conan", ref = "cmake/3.30.2@silabs#8798657aa78b2da38a3ae465f2d10090", type = "apack", version = "3.30.2" }]
+  commander = [{ installer = "archive", type = "apack", version = "1.24.3" }]
+  gcc-arm-none-eabi = [{ installer = "conan", ref = "gcc-arm-none-eabi/12.2.rel1@silabs#a2910f647691a3764cd3e48412673f25", type = "toolchain", version = "12.2.rel1" }]
+  java21 = [{ installer = "archive", type = "tools", version = "21.0.6" }]
+  ninja = [{ installer = "conan", ref = "ninja/1.12.1@silabs#9ce59e07a142d4da1c532b49742fe16d", type = "apack", version = "1.12.1" }]
+  "pintool_com.silabs.sdk.stack.sisdk_2025.6.3" = [{ installer = "conan", ref = "pintool_com.silabs.sdk.stack.sisdk_2025.6.3/2025.6.3@silabs#55f2000b00a6c12370857b4051d2c6d9", type = "software", version = "2025.6.3" }]
+  python = [{ installer = "archive", type = "tools", version = "3.10.3" }]
+  simplicity-sdk = [{ installer = "conan", ref = "simplicity-sdk/2025.6.3@silabs#d46ff30f22baba239cd97ecebd35d83f", type = "sdk", version = "2025.6.3" }]
+  slc-cli = [{ installer = "archive", type = "tools", version = "6.0.23" }]
+  zap = [{ installer = "archive", type = "apack", version = "2026.06.17" }]
+
+[engine]
+  conan-repos = ["https://conan.silabs.net"]
