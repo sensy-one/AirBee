@@ -1,4 +1,4 @@
-# Local documentation, tooling and signing material
+
 /internal/
 /tools/
 keys/
@@ -7,7 +7,7 @@ keys/
 .env
 .env.*
 
-# Generated projects and firmware; only the verified customer update is public
+
 /build/
 /generated/
 /autogen/
@@ -21,10 +21,10 @@ keys/
 *.a
 !/firmware/v1.0.0/AirBee-update.gbl
 
-# Legacy local configuration (kept under internal/)
+
 /user.slconf
 
-# Local editor, agent and operating-system files
+
 /.vscode/
 /.idea/
 /.agents/
