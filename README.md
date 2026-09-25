@@ -8,7 +8,7 @@ Bluetooth Low Energy connectivity
 AirBee measures CO₂, temperature, relative humidity and atmospheric pressure
 every five minutes. It uses the pressure reading to compensate the CO₂ sensor
 and keeps automatic calibration active while saving power between measurements.
-Choose Zigbee or Bluetooth LE with the button; AirBee remembers your choice.
+Choose Zigbee or Bluetooth LE with the button
 
 Key features:
 
@@ -168,7 +168,7 @@ or near combustion equipment.
 AirBee can be updated wirelessly over Bluetooth Low Energy. Customers do not
 need an ST-Link, programming adapter or development software.
 
-1. Download [AirBee-update.gbl — v1.0.0](firmware/v1.0.0/AirBee-update.gbl)
+1. Download [AirBee-update.gbl](firmware/v1.0.0/AirBee-update.gbl)
    using **Download raw file** on the file page.
 2. Install Silicon Labs Simplicity Connect for
    [Android](https://play.google.com/store/apps/details?id=com.siliconlabs.bledemo)
