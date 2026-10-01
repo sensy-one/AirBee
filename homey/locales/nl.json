@@ -1,0 +1,9 @@
+{
+  "ble": {
+    "stale": "Al 20 minuten geen AirBee-metingen. Controleer de Bluetooth-modus, het bereik en de batterij.",
+    "unsupported": "Ontvangst van Bluetooth-advertenties is vereist. Gebruik een geschikte Homey met Bluetooth LE en Homey 13.4 of nieuwer."
+  },
+  "sensor": {
+    "waiting": "Wachten op de eerste AirBee-metingen."
+  }
+}

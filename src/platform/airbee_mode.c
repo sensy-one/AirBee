@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 #include "airbee_board.h"
+#include "airbee_zigbee.h"
 #include "cmsis_os2.h"
 #include "em_gpio.h"
 #include "gpiointerrupt.h"
@@ -16,6 +17,8 @@
 
 #define AIRBEE_MODE_HOLD_MS             5000UL
 #define AIRBEE_DFU_HOLD_MS              12000UL
+#define AIRBEE_RESET_HOLD_MS            20000UL
+#define AIRBEE_RESET_BLINK_MS           100UL
 #define AIRBEE_BUTTON_DEBOUNCE_MS       30UL
 #define AIRBEE_BUTTON_POLL_MS           50UL
 #define AIRBEE_MODE_BLINK_COUNT         4U
@@ -29,9 +32,11 @@
 typedef enum {
   AIRBEE_MODE_ZIGBEE = 0U,
   AIRBEE_MODE_BLUETOOTH = 1U,
+  AIRBEE_MODE_RESET_PENDING = 2U,
 } airbee_mode_t;
 
 static airbee_mode_t active_mode = AIRBEE_MODE_ZIGBEE;
+static bool reset_pending;
 static osThreadId_t button_thread_id;
 static uint32_t button_wake_mask;
 static bool calibration_active;
@@ -105,9 +110,10 @@ static void load_mode(void)
                     AIRBEE_MODE_NVM_KEY,
                     &stored_mode,
                     sizeof(stored_mode))
-        == SL_STATUS_OK
-      && stored_mode == AIRBEE_MODE_BLUETOOTH) {
-    active_mode = AIRBEE_MODE_BLUETOOTH;
+        == SL_STATUS_OK) {
+    active_mode = stored_mode == AIRBEE_MODE_BLUETOOTH
+                    ? AIRBEE_MODE_BLUETOOTH : AIRBEE_MODE_ZIGBEE;
+    reset_pending = stored_mode == AIRBEE_MODE_RESET_PENDING;
   }
 }
 
@@ -172,6 +178,9 @@ static void button_task(void *argument)
     = milliseconds_to_ticks(AIRBEE_BUTTON_DEBOUNCE_MS);
   const uint32_t hold_ticks = milliseconds_to_ticks(AIRBEE_MODE_HOLD_MS);
   const uint32_t dfu_ticks = milliseconds_to_ticks(AIRBEE_DFU_HOLD_MS);
+  const uint32_t reset_ticks = milliseconds_to_ticks(AIRBEE_RESET_HOLD_MS);
+  const uint32_t reset_blink_ticks
+    = milliseconds_to_ticks(AIRBEE_RESET_BLINK_MS);
   const uint32_t poll_ticks = milliseconds_to_ticks(AIRBEE_BUTTON_POLL_MS);
 
   if (calibration_active) {
@@ -231,16 +240,38 @@ static void button_task(void *argument)
     const airbee_mode_t next_mode
       = airbee_mode_is_bluetooth() ? AIRBEE_MODE_ZIGBEE : AIRBEE_MODE_BLUETOOTH;
     blink_mode(next_mode);
-    while (button_is_pressed()
-           && (osKernelGetTickCount() - press_started) < dfu_ticks) {
+    bool dfu_selected = false;
+    bool reset_selected = false;
+    for (;;) {
+      if (!button_is_pressed()) {
+        (void)osDelay(debounce_ticks);
+        if (!button_is_pressed()) {
+          break;
+        }
+      }
+      const uint32_t elapsed = osKernelGetTickCount() - press_started;
+      if (elapsed >= reset_ticks) {
+        reset_selected = true;
+        if (((elapsed - reset_ticks) / reset_blink_ticks) % 2U == 0U) {
+          zigbee_led_on();
+        } else {
+          leds_off();
+        }
+      } else if (elapsed >= dfu_ticks && !dfu_selected) {
+        dfu_selected = true;
+        blink_dfu();
+      }
       (void)osDelay(poll_ticks);
     }
 
-    if (button_is_pressed()) {
-      blink_dfu();
+    leds_off();
+    if (reset_selected) {
+      if (store_mode(AIRBEE_MODE_RESET_PENDING)) {
+        NVIC_SystemReset();
+      }
+    } else if (dfu_selected) {
       sl_apploader_util_reset_to_ota_dfu();
     } else if (store_mode(next_mode)) {
-      (void)osDelay(debounce_ticks);
       NVIC_SystemReset();
     }
 
@@ -275,6 +306,13 @@ void airbee_mode_init(void)
     AIRBEE_BUTTON_PORT, AIRBEE_BUTTON_PIN, gpioModeInputPullFilter, 1U);
 
   load_mode();
+  if (reset_pending) {
+    zigbee_led_on();
+    if (airbee_zigbee_reset_network() && store_mode(AIRBEE_MODE_ZIGBEE)) {
+      NVIC_SystemReset();
+    }
+    return;
+  }
   calibration_active = startup_button_is_pressed();
 
   const unsigned int interrupt_number = GPIOINT_EM4WUCallbackRegisterExt(
@@ -289,6 +327,11 @@ void airbee_mode_init(void)
 bool airbee_mode_is_bluetooth(void)
 {
   return active_mode == AIRBEE_MODE_BLUETOOTH;
+}
+
+bool airbee_mode_reset_pending(void)
+{
+  return reset_pending;
 }
 
 bool airbee_mode_calibration_active(void)

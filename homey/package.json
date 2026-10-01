@@ -1,0 +1,14 @@
+{
+  "name": "com.sensy-one.airbee",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Ultra-low-power air quality sensor for Homey with Zigbee and Bluetooth LE",
+  "main": "app.js",
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "homey-zigbeedriver": "2.2.18",
+    "zigbee-clusters": "3.8.0"
+  }
+}

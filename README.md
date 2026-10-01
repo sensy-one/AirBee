@@ -1,19 +1,30 @@
 # SENSY-ONE AirBee
 
-An ultra-low-power indoor air-quality sensor with selectable Zigbee or
-Bluetooth Low Energy connectivity
+Ultra-low-power air quality sensor for **Home Assistant** and **Homey Pro**,
+with selectable Zigbee or Bluetooth Low Energy connectivity.
 
-![SENSY-ONE AirBee](docs/images/airbee-front.png)
+![Sensy-One AirBee](docs/images/airbee-front.png)
 
 AirBee measures CO₂, temperature, relative humidity and atmospheric pressure
 every five minutes. It uses the pressure reading to compensate the CO₂ sensor
 and keeps automatic calibration active while saving power between measurements.
-Choose Zigbee or Bluetooth LE with the button
+
+### Smart Home Compatibility
+
+| Platform | Connection | Integration |
+|---|---|---|
+| Home Assistant | Zigbee | [Zigbee2MQTT](#zigbee2mqtt) or [ZHA](#zha) |
+| Home Assistant | Bluetooth LE | [BTHome](#home-assistant-with-bluetooth-le-bthome) |
+| Homey Pro | Zigbee or Bluetooth LE | [SENSY-ONE app](homey/README.md) |
+
+All options provide CO₂, temperature, humidity and pressure measurements.
+AirBee uses one wireless mode at a time and can join one Zigbee network at a time.
 
 Key features:
 
 - Selectable Zigbee or Bluetooth Low Energy connectivity
-- Built-in Home Assistant support through BTHome in Bluetooth mode
+- Home Assistant support through Zigbee2MQTT, ZHA or BTHome
+- Homey Pro support through the SENSY-ONE app, with Zigbee and Bluetooth LE
 - Five-minute CO₂, temperature, humidity and pressure measurements
 - Pressure compensation for CO₂ measurements
 - Automatic CO₂ baseline calibration
@@ -27,24 +38,93 @@ Key features:
    battery; holding it during startup starts CO₂ calibration.
 2. Check the startup LED: **four red flashes mean Zigbee**, and **four blue
    flashes mean Bluetooth LE**. A new device starts in Zigbee mode.
-3. To change modes, hold the button for about **five seconds**. Release it after
-   the four flashes for the new mode. AirBee saves your choice and restarts.
+3. Use the button controls below to select a wireless mode, then follow the
+   connection steps for your platform below.
 
-**Connect with Zigbee**
+### Button Controls
 
-Enable pairing on your Zigbee coordinator, then start AirBee in Zigbee mode.
-If it is already powered on, remove the battery for at least three seconds and
-reinsert it with the button released. AirBee searches for the network automatically.
+With AirBee powered on, hold the button until the desired indication, then
+release it to confirm. Keep holding past the earlier indications to reach
+firmware update or reset.
 
-**Connect with Bluetooth LE**
+| Button action | Function | LED indication |
+|---|---|---|
+| Short press | No action | None |
+| Hold for **5 seconds**, then release | Switch between Zigbee and Bluetooth LE | Four red flashes for Zigbee or four blue flashes for Bluetooth LE |
+| Hold for **12 seconds**, then release | Start Bluetooth firmware update mode | Green flashes; continuous green blinking after release |
+| Hold for **20 seconds**, then release | Clear Zigbee pairing and join a network | Fast red blinking; AirBee restarts in Zigbee mode |
+| Hold while inserting the battery | Start [outdoor-air calibration](#co₂-calibration) immediately | Alternating red and blue; solid green on success or solid red on failure |
 
-Make sure Home Assistant has a working Bluetooth adapter or Bluetooth proxy.
-With AirBee in Bluetooth mode, open **Settings → Devices & services** and add
-the discovered **BTHome** device. No Bluetooth pairing is needed.
+### Home Assistant with Zigbee
+
+Use either Zigbee2MQTT or ZHA with a compatible Zigbee coordinator. Start pairing
+in your chosen integration:
+
+#### Zigbee2MQTT
+
+Open Zigbee2MQTT and enable **Permit join**. To make measurements appear in
+Home Assistant, enable Zigbee2MQTT's **Home Assistant discovery** and set up the
+[MQTT integration](https://www.home-assistant.io/integrations/mqtt/) in Home
+Assistant using the same MQTT broker. See the
+[Zigbee2MQTT setup guide](https://www.zigbee2mqtt.io/guide/usage/integrations/home_assistant.html).
+
+#### ZHA
+
+In Home Assistant, open **Settings → Connectivity → Zigbee → Add device**.
+If ZHA is not set up yet, follow the
+[ZHA setup guide](https://www.home-assistant.io/integrations/zha/).
+
+#### Pair AirBee
+
+1. Enable joining as described above for your integration.
+2. Start AirBee in Zigbee mode (**four red flashes**). If it is already powered
+   on, remove the battery for at least three seconds and reinsert it with the
+   button released.
+3. AirBee searches for a network automatically. Wait for the interview to finish,
+   then name the device and assign it to a room in Home Assistant.
+
+If AirBee was previously paired, follow [Reset & Re-pair](#reset--re-pair) below.
+Allow up to five minutes for measurements to appear.
+
+### Reset & Re-pair
+
+1. Enable pairing on your Zigbee coordinator.
+2. With AirBee powered on, hold the button for **20 seconds**. Keep holding
+   through the mode flashes and green firmware-update indication.
+3. Release when the LED starts **blinking red quickly**.
+4. AirBee clears its saved Zigbee network settings, restarts in Zigbee mode and
+   automatically searches for a network.
+
+This works from either wireless mode and preserves CO₂ calibration. Removing
+the battery or switching modes does not clear the Zigbee pairing.
+
+### Home Assistant with Bluetooth LE (BTHome)
+
+1. Make sure Home Assistant's Bluetooth integration is set up with a working
+   Bluetooth adapter or Bluetooth proxy.
+2. Select Bluetooth mode (**four blue flashes**) using the button controls above.
+3. In Home Assistant, open **Settings → Devices & services** and add the
+   discovered **BTHome** device. No Bluetooth pairing or pairing reset is needed.
+
+[BTHome](https://www.home-assistant.io/integrations/bthome/) is built into Home
+Assistant; no custom integration is required.
 
 Place AirBee where room air can reach the sensor and allow up to five minutes
 for measurements to appear. The LED stays off during normal operation to save
 power. A short button press does not trigger a measurement.
+
+### Connect with Homey Pro
+
+The [SENSY-ONE Homey app](homey/README.md) includes separate **AirBee Zigbee**
+and **AirBee BLE** drivers for CO₂, temperature, humidity and pressure.
+Choose the driver that matches AirBee's wireless mode.
+
+Download and extract this repository, then open the `homey` folder and run
+**Install on Mac.command** or **Install on Windows.cmd**. The installer downloads
+the required tools and lets you choose your Homey. See the
+[installation instructions](homey/README.md#install).
+An AirBee previously added as a generic Zigbee device must be paired again
+through the SENSY-ONE app to use its driver.
 
 ## Measurements and Accuracy
 
@@ -61,7 +141,7 @@ Published resolution:
 - Temperature: 0.01 °C
 - Relative humidity: 0.01 %RH
 - Pressure: 1 hPa
- 
+
 Temperature is transmitted in degrees Celsius. A smart-home frontend can display
 the same measurement in Fahrenheit.
 
@@ -112,30 +192,8 @@ Bluetooth mode works with Home Assistant through its built-in
 [BTHome integration](https://www.home-assistant.io/integrations/bthome/).
 No custom integration or pairing is needed.
 
-1. Make sure Home Assistant has Bluetooth available through an adapter or
-   Bluetooth proxy.
-2. Switch AirBee to Bluetooth mode: hold the button for five seconds and release
-   it after the four blue flashes.
-3. In Home Assistant, open **Settings → Devices & services** and add the
-   discovered BTHome device.
-
 AirBee sends CO₂, temperature, humidity and pressure using
 [BTHome v2](https://bthome.io/). Allow up to five minutes for the next broadcast.
-
-## Mode Selection
-
-Hold the button for five seconds to switch modes. AirBee confirms the new mode,
-saves it and restarts automatically.
-
-| Button action | Function | LED indication |
-|---|---|---|
-| Short press | No action | None |
-| Hold for 5 seconds | Switch between Zigbee and Bluetooth LE | Four red flashes for Zigbee or four blue flashes for Bluetooth LE |
-| Hold for 12 seconds | Start Bluetooth firmware update mode | Green flashes followed by continuous green blinking |
-| Hold while inserting the battery | Start protected outdoor-air calibration immediately | Alternating red and blue while stabilizing, then solid green or solid red |
-
-At normal startup, four blue flashes indicate Bluetooth LE and four red flashes
-indicate Zigbee.
 
 ## CO₂ Calibration
 
@@ -165,16 +223,17 @@ or near combustion equipment.
 
 ## Firmware Updates
 
-AirBee can be updated wirelessly over Bluetooth Low Energy. Customers do not
-need an ST-Link, programming adapter or development software.
+Update AirBee wirelessly over Bluetooth Low Energy with Silicon Labs
+Simplicity Connect.
 
-1. Download [AirBee-update.gbl](firmware/v1.0.0/AirBee-update.gbl)
+1. Download [AirBee-update.gbl](firmware/v1.0.1/AirBee-update.gbl)
    using **Download raw file** on the file page.
 2. Install Silicon Labs Simplicity Connect for
    [Android](https://play.google.com/store/apps/details?id=com.siliconlabs.bledemo)
    or [iOS](https://apps.apple.com/us/app/simplicity-connect/id1030932759).
 3. Hold the AirBee button for 12 seconds. Continue holding after the first mode
-   indication and release the button after the LED flashes green.
+   indication and release the button after the LED flashes green, before
+   reaching the 20-second reset indication.
 4. Open **Scan** in Simplicity Connect and scan for nearby devices.
 5. Connect to **AirBee DFU**.
 6. In the connected device view, tap **OTA Firmware** in the upper-right corner

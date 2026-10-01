@@ -1,0 +1,167 @@
+{
+  "id": "com.sensy-one.airbee",
+  "version": "1.0.0",
+  "compatibility": ">=13.4.0",
+  "sdk": 3,
+  "runtime": "nodejs",
+  "platforms": [
+    "local"
+  ],
+  "name": {
+    "en": "SENSY-ONE",
+    "nl": "SENSY-ONE"
+  },
+  "description": {
+    "en": "Ultra-low-power air quality sensor",
+    "nl": "Zeer energiezuinige luchtkwaliteitssensor"
+  },
+  "category": [
+    "climate"
+  ],
+  "brandColor": "#402BC3",
+  "permissions": [
+    "homey:wireless:zigbee",
+    "homey:wireless:ble"
+  ],
+  "author": {
+    "name": "SENSY-ONE",
+    "email": "info@sensy-one.com"
+  },
+  "support": "https://discord.gg/TB78Wprn66",
+  "homepage": "https://sensy-one.com",
+  "images": {
+    "small": "/assets/images/sensy-one-purple-small.png",
+    "large": "/assets/images/sensy-one-purple-large.png",
+    "xlarge": "/assets/images/sensy-one-purple-xlarge.png"
+  },
+  "drivers": [
+    {
+      "class": "sensor",
+      "platforms": [
+        "local"
+      ],
+      "capabilities": [
+        "measure_co2",
+        "measure_temperature",
+        "measure_humidity",
+        "measure_pressure"
+      ],
+      "capabilitiesOptions": {
+        "measure_temperature": {
+          "decimals": 2
+        },
+        "measure_humidity": {
+          "decimals": 2
+        },
+        "measure_pressure": {
+          "decimals": 0
+        },
+        "measure_co2": {
+          "decimals": 0
+        }
+      },
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "images": {
+        "small": "/drivers/airbee-zigbee/assets/images/small.png",
+        "large": "/drivers/airbee-zigbee/assets/images/large.png",
+        "xlarge": "/drivers/airbee-zigbee/assets/images/xlarge.png"
+      },
+      "id": "airbee-zigbee",
+      "name": {
+        "en": "AirBee Zigbee",
+        "nl": "AirBee Zigbee"
+      },
+      "connectivity": [
+        "zigbee"
+      ],
+      "zigbee": {
+        "manufacturerName": "SENSY-ONE",
+        "productId": [
+          "AirBee"
+        ],
+        "endpoints": {
+          "1": {
+            "clusters": [
+              0,
+              3,
+              1026,
+              1027,
+              1029,
+              1037
+            ],
+            "bindings": [
+              1026,
+              1027,
+              1029,
+              1037
+            ]
+          }
+        }
+      }
+    },
+    {
+      "class": "sensor",
+      "platforms": [
+        "local"
+      ],
+      "capabilities": [
+        "measure_co2",
+        "measure_temperature",
+        "measure_humidity",
+        "measure_pressure"
+      ],
+      "capabilitiesOptions": {
+        "measure_temperature": {
+          "decimals": 2
+        },
+        "measure_humidity": {
+          "decimals": 2
+        },
+        "measure_pressure": {
+          "decimals": 0
+        },
+        "measure_co2": {
+          "decimals": 0
+        }
+      },
+      "energy": {
+        "batteries": [
+          "OTHER"
+        ]
+      },
+      "images": {
+        "small": "/drivers/airbee-ble/assets/images/small.png",
+        "large": "/drivers/airbee-ble/assets/images/large.png",
+        "xlarge": "/drivers/airbee-ble/assets/images/xlarge.png"
+      },
+      "id": "airbee-ble",
+      "name": {
+        "en": "AirBee BLE",
+        "nl": "AirBee BLE"
+      },
+      "connectivity": [
+        "ble"
+      ],
+      "pair": [
+        {
+          "id": "list_devices",
+          "template": "list_devices",
+          "options": {
+            "singular": true
+          },
+          "navigation": {
+            "next": "add_devices"
+          }
+        },
+        {
+          "id": "add_devices",
+          "template": "add_devices"
+        }
+      ]
+    }
+  ]
+}

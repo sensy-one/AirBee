@@ -8,6 +8,11 @@
 #include "airbee_sensors.h"
 #include "airbee_zigbee.h"
 #include "app/framework/include/af.h"
+#include "sl_main_start_task_config.h"
+
+#if SL_MAIN_ENABLE_START_TASK_PRIORITY_CHANGE
+#error "AirBee startup reset requires the start task to keep its initial priority"
+#endif
 
 #define AIRBEE_MEASUREMENT_INTERVAL_MS 300000UL
 #define AIRBEE_CO2_RETRY_INTERVAL_MS   10000UL
@@ -136,7 +141,10 @@ static void measurement_event_handler(sl_zigbee_af_event_t *event)
   }
 }
 
-void app_init(void) {}
+void app_init(void)
+{
+  airbee_mode_init();
+}
 
 void app_process_action(void) {}
 
@@ -146,8 +154,10 @@ void sl_zigbee_af_main_init_cb(void)
   sl_zigbee_af_isr_event_init(&sunrise_ready_event,
                               sunrise_ready_event_handler);
 
+  if (airbee_mode_reset_pending()) {
+    return;
+  }
   airbee_sensors_init(sunrise_ready_gpio_isr);
-  airbee_mode_init();
   airbee_zigbee_init(!airbee_mode_is_bluetooth()
                        && !airbee_mode_calibration_active(),
                      zigbee_connection_changed);

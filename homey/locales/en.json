@@ -1,0 +1,9 @@
+{
+  "ble": {
+    "stale": "No AirBee measurements for 20 minutes. Check Bluetooth mode, range and the battery.",
+    "unsupported": "Bluetooth advertisement reception is required. Use a compatible Homey with Bluetooth LE and Homey 13.4 or newer."
+  },
+  "sensor": {
+    "waiting": "Waiting for the first AirBee measurements."
+  }
+}

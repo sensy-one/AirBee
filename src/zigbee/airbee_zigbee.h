@@ -8,3 +8,4 @@ void airbee_zigbee_init(bool enabled,
                         airbee_zigbee_connection_callback_t callback);
 bool airbee_zigbee_connected(void);
 void airbee_zigbee_publish(void);
+bool airbee_zigbee_reset_network(void);
