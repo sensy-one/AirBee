@@ -3,6 +3,3 @@ node_modules/
 README.md
 *.homeyapp
 .DS_Store
-Install on Mac.command
-Install on Windows.cmd
-installer/

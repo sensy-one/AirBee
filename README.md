@@ -15,7 +15,7 @@ and keeps automatic calibration active while saving power between measurements.
 |---|---|---|
 | Home Assistant | Zigbee | [Zigbee2MQTT](#zigbee2mqtt) or [ZHA](#zha) |
 | Home Assistant | Bluetooth LE | [BTHome](#home-assistant-with-bluetooth-le-bthome) |
-| Homey Pro | Zigbee or Bluetooth LE | [SENSY-ONE app](homey/README.md) |
+| Homey Pro | Zigbee or Bluetooth LE | [SENSY-ONE app in the Homey App Store](https://homey.app/en-nl/app/com.sensy-one.airbee/SENSY-ONE/test/) |
 
 All options provide CO₂, temperature, humidity and pressure measurements.
 AirBee uses one wireless mode at a time and can join one Zigbee network at a time.
@@ -115,16 +115,13 @@ power. A short button press does not trigger a measurement.
 
 ### Connect with Homey Pro
 
-The [SENSY-ONE Homey app](homey/README.md) includes separate **AirBee Zigbee**
-and **AirBee BLE** drivers for CO₂, temperature, humidity and pressure.
-Choose the driver that matches AirBee's wireless mode.
+1. Open [SENSY-ONE in the Homey App Store](https://homey.app/en-nl/app/com.sensy-one.airbee/SENSY-ONE/test/)
+   and select **Install App**. Sign in and choose your Homey Pro.
+2. In Homey, go to **Devices, Add device, SENSY-ONE** and choose **AirBee Zigbee**
+   or **AirBee BLE**, matching your sensor's wireless mode.
 
-Download and extract this repository, then open the `homey` folder and run
-**Install on Mac.command** or **Install on Windows.cmd**. The installer downloads
-the required tools and lets you choose your Homey. See the
-[installation instructions](homey/README.md#install).
-An AirBee previously added as a generic Zigbee device must be paired again
-through the SENSY-ONE app to use its driver.
+The app is under review by Homey, but you can already install and use it through
+the test link above. The App Store warning means the review is still pending.
 
 ## Measurements and Accuracy
 

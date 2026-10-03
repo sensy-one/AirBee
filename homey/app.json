@@ -12,8 +12,8 @@
     "nl": "SENSY-ONE"
   },
   "description": {
-    "en": "Ultra-low-power air quality sensor",
-    "nl": "Zeer energiezuinige luchtkwaliteitssensor"
+    "en": "AirBee",
+    "nl": "AirBee"
   },
   "category": [
     "climate"
@@ -30,9 +30,9 @@
   "support": "https://discord.gg/TB78Wprn66",
   "homepage": "https://sensy-one.com",
   "images": {
-    "small": "/assets/images/sensy-one-purple-small.png",
-    "large": "/assets/images/sensy-one-purple-large.png",
-    "xlarge": "/assets/images/sensy-one-purple-xlarge.png"
+    "small": "/assets/images/airbee-front-small.png",
+    "large": "/assets/images/airbee-front-large.png",
+    "xlarge": "/assets/images/airbee-front-xlarge.png"
   },
   "drivers": [
     {

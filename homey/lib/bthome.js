@@ -9,7 +9,7 @@ function isBTHomeService(uuid) {
 
 function servicePayload(advertisement) {
   if (!Array.isArray(advertisement?.serviceData)) return null;
-  const service = advertisement.serviceData.find(entry => isBTHomeService(entry.uuid));
+  const service = advertisement.serviceData.find(entry => entry && isBTHomeService(entry.uuid));
   return service && Buffer.isBuffer(service.data) ? service.data : null;
 }
 
